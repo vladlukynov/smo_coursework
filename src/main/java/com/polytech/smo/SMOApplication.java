@@ -1,12 +1,21 @@
 package com.polytech.smo;
 
-/*
-public class HelloApplication extends Application {
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
+public class SMOApplication extends Application {
+    public static SystemController systemController;
+
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        FXMLLoader fxmlLoader = new FXMLLoader(SMOApplication.class.getResource("settings-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("Настройки");
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }
@@ -14,22 +23,10 @@ public class HelloApplication extends Application {
     public static void main(String[] args) {
         launch();
     }
-}
-*/
 
-public class SMOApplication {
-    public static void main(String[] args) {
-        int sourceDevicesCount = 4;
-        int bufferDevicesCount = 4;
-        int processingDevicesCount = 4;
-        double lambda = 3.0;
-        double a = 2.0;
-        double b = 3.0;
-
-        SystemController systemController = new SystemController(sourceDevicesCount, bufferDevicesCount, processingDevicesCount,
+    public static void initializeSystemController(int sourceDevicesCount, int bufferDevicesCount, int processingDevicesCount,
+                                                  double lambda, double a, double b) {
+        systemController = new SystemController(sourceDevicesCount, bufferDevicesCount, processingDevicesCount,
                 lambda, a, b);
-        for (int i = 0; i < 100; i++) {
-            systemController.userClickNextButton();
-        }
     }
 }
