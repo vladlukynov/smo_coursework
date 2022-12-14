@@ -2,13 +2,17 @@ package com.polytech.smo.devices;
 
 import com.polytech.smo.events.Event;
 import com.polytech.smo.events.EventTypes;
+import com.polytech.smo.table.TableEvent;
+import com.polytech.smo.table.TableProcessingDevice;
 import com.polytech.smo.utils.Utils;
+import com.polytech.smo.view.ModelingController;
 
 import java.util.List;
 
 public class ProcessingDevice {
     private final int deviceId;
     private Event processingEvent;
+    private double endProcessingTime;
     private final List<Event> events;
     private boolean isProcessing;
     private final double a;
@@ -21,19 +25,28 @@ public class ProcessingDevice {
         this.a = a;
         this.b = b;
         this.processingEvent = null;
+        this.endProcessingTime = 0;
     }
 
-    public void setEventOnProcess(Event event) {
+    public void setEventOnProcess(Event event, double setTime) {
         isProcessing = true;
         processingEvent = event;
-        double endProcessingTime = event.getEventTime() + Utils.getNormalDistributionTime(a, b);
+        this.endProcessingTime = event.getEventTime() + Utils.getNormalDistributionTime(a, b);
         events.add(new Event(EventTypes.EndProcessing, endProcessingTime, event.getDeviceId(), event.getCount()));
-        System.out.println("Заявка " + event.getDeviceId() + "." + event.getCount() + " установлена на прибор " + deviceId
-                + ", время окончания: " + endProcessingTime);
+        ModelingController.tableEvents.add(new TableEvent(setTime, "Постановка заявки " +
+                event.getDeviceId() + "." + event.getCount() + " на прибор " + deviceId));
+
+        ModelingController.tableProcessingDevices.removeIf(device -> device.getDeviceId() == deviceId);
+        ModelingController.tableProcessingDevices.add(new TableProcessingDevice(deviceId, "Выполняет заявку " +
+                event.getDeviceId() + "." + event.getCount(), event.getEventTime(), endProcessingTime));
     }
 
     public void free() {
-        System.out.println("Освобождение прибора " + deviceId);
+        ModelingController.tableProcessingDevices.removeIf(device -> device.getDeviceId() == deviceId);
+        ModelingController.tableProcessingDevices.add(new TableProcessingDevice(deviceId, "Простой",
+                0.0, 0.0));
+        ModelingController.tableEvents.add(new TableEvent(endProcessingTime,
+                "Освобождение прибора " + deviceId));
         isProcessing = false;
         processingEvent = null;
     }

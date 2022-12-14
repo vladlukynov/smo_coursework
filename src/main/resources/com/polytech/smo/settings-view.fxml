@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="400.0" spacing="50.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.polytech.smo.view.SettingsController">
+<VBox alignment="TOP_CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="500.0" spacing="50.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.polytech.smo.view.SettingsController">
    <children>
       <Label text="Установка настроек">
          <font>
@@ -17,14 +17,44 @@
       </Label>
       <VBox alignment="TOP_CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="198.0" spacing="10.0">
          <children>
-            <TextField fx:id="sourceDeviceCountLabel" promptText="sourceDevicesCount" />
-            <TextField fx:id="bufferDeviceCountLabel" promptText="bufferDevicesCount" />
-            <TextField fx:id="processingDeviceCountLabel" promptText="processingDevicesCount" />
-            <TextField fx:id="lambdaLabel" promptText="lambda" />
+            <VBox>
+               <children>
+                  <Label text="sourceDevicesCount" />
+                  <TextField fx:id="sourceDeviceCountLabel" text="4" />
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <Label text="bufferDevicesCount" />
+                  <TextField fx:id="bufferDeviceCountLabel" text="4" />
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <Label text="processingDevicesCount" />
+                  <TextField fx:id="processingDeviceCountLabel" text="4" />
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <Label text="lambda" />
+                  <TextField fx:id="lambdaLabel" text="3.0" />
+               </children>
+            </VBox>
             <HBox spacing="10.0">
                <children>
-                  <TextField fx:id="aLabel" promptText="a" />
-                  <TextField fx:id="bLabel" promptText="b" />
+                  <VBox>
+                     <children>
+                        <Label text="a" />
+                        <TextField fx:id="aLabel" text="2.0" />
+                     </children>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <Label text="b" />
+                        <TextField fx:id="bLabel" text="3.0" />
+                     </children>
+                  </VBox>
                </children>
             </HBox>
          </children>

@@ -1,9 +1,18 @@
 package com.polytech.smo.utils;
 
+import com.polytech.smo.SMOApplication;
 import com.polytech.smo.devices.BufferDevice;
 import com.polytech.smo.devices.ProcessingDevice;
 import com.polytech.smo.events.Event;
+import com.polytech.smo.table.TableBuffer;
+import com.polytech.smo.table.TableEvent;
+import com.polytech.smo.table.TableProcessingDevice;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Comparator;
 
 public class Utils {
@@ -15,39 +24,41 @@ public class Utils {
         return Math.random() * (b - a) + a;
     }
 
-    public static Comparator<Event> eventComparator = (o1, o2) -> {
-        if (o1.getEventTime() > o2.getEventTime()) {
-            return 1;
-        } else if (o1.getEventTime() < o2.getEventTime()) {
-            return -1;
+    public static void createStage(String view, String title, Stage oldStage, boolean closeCurrentStage,
+                                    boolean resizable) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(SMOApplication.class.getResource(view));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle(title);
+        stage.setResizable(resizable);
+        stage.setScene(scene);
+        if (closeCurrentStage) {
+            oldStage.close();
         }
-        return 0;
-    };
+        stage.show();
+    }
 
-    public static Comparator<ProcessingDevice> processingDevicePriorityComparator = (o1, o2) -> {
-        if (o1.getDeviceId() > o2.getDeviceId()) {
-            return 1;
-        } else if (o1.getDeviceId() < o2.getDeviceId()) {
-            return -1;
-        }
-        return 0;
-    };
+    public static Stage getStage(Node node) {
+        return (Stage) node.getScene().getWindow();
+    }
 
-    public static Comparator<BufferDevice> bufferDevicePriorityComparator = (o1, o2) -> {
-        if (o1.getDeviceId() > o2.getDeviceId()) {
-            return 1;
-        } else if (o1.getDeviceId() < o2.getDeviceId()) {
-            return -1;
-        }
-        return 0;
-    };
+    public static Comparator<Event> eventComparator = Comparator.comparingDouble(Event::getEventTime);
 
-    public static Comparator<BufferDevice> bufferedEventTimeComparator = (o1, o2) -> {
-        if (o1.getBufferedEvent().getEventTime() > o2.getBufferedEvent().getEventTime()) {
-            return 1;
-        } else if (o1.getBufferedEvent().getEventTime() < o2.getBufferedEvent().getEventTime()) {
-            return -1;
-        }
-        return 0;
-    };
+    public static Comparator<ProcessingDevice> processingDevicePriorityComparator =
+            Comparator.comparingInt(ProcessingDevice::getDeviceId);
+
+    public static Comparator<BufferDevice> bufferDevicePriorityComparator =
+            Comparator.comparingInt(BufferDevice::getDeviceId);
+
+    public static Comparator<BufferDevice> bufferedEventTimeComparator =
+            Comparator.comparingDouble(o -> o.getBufferedEvent().getEventTime());
+
+    public static Comparator<TableEvent> tableEventComparator =
+            Comparator.comparing(TableEvent::getEventTime);
+
+    public static Comparator<TableBuffer> tableBufferComparator =
+            Comparator.comparing(TableBuffer::getDeviceId);
+
+    public static Comparator<TableProcessingDevice> tableProcessingDeviceComparator =
+            Comparator.comparing(TableProcessingDevice::getDeviceId);
 }

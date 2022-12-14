@@ -5,7 +5,10 @@ import com.polytech.smo.devices.ProcessingDevice;
 import com.polytech.smo.devices.SourceDevice;
 import com.polytech.smo.events.Event;
 import com.polytech.smo.events.EventTypes;
+import com.polytech.smo.table.TableBuffer;
+import com.polytech.smo.table.TableProcessingDevice;
 import com.polytech.smo.utils.Utils;
+import com.polytech.smo.view.ModelingController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,24 +30,27 @@ public class SystemController {
         generateSourceDevices(sourceDevicesCount, lambda, events);
         generateBufferDevices(bufferDevicesCount, events);
         generateProcessingDevices(processingDevicesCount, a, b, events);
-
-        generateFirstEvents();
     }
 
     public void userClickNextButton() {
+        if (events.isEmpty()) {
+            generateFirstEvents();
+        }
+
         events.sort(Utils.eventComparator);
         Event event = popEvent();
 
         if (event.getEventType() == EventTypes.EndProcessing) {
             Optional<ProcessingDevice> processingDevice = processingDevices.stream()
-                    .filter(device -> device.getProcessingEvent().equals(event)).findFirst();
+                    .filter(device -> device.getProcessingEvent().getDeviceId() == event.getDeviceId() &&
+                            device.getProcessingEvent().getCount() == event.getCount()).findFirst();
             processingDevice.ifPresent(ProcessingDevice::free);
 
             Optional<BufferDevice> bufferDevice = bufferDevices.stream().filter(BufferDevice::isBuffered_)
                     .max(Utils.bufferedEventTimeComparator);
             if (bufferDevice.isPresent()) {
-                Event bufferedEvent = bufferDevice.get().getEventAndFreeDevice();
-                processingDevice.ifPresent(device -> device.setEventOnProcess(bufferedEvent));
+                Event bufferedEvent = bufferDevice.get().getEventAndFreeDevice(event.getEventTime());
+                processingDevice.ifPresent(device -> device.setEventOnProcess(bufferedEvent, event.getEventTime()));
                 return;
             }
 
@@ -58,7 +64,7 @@ public class SystemController {
                     .min(Utils.processingDevicePriorityComparator);
 
             if (processingDevice.isPresent()) {
-                processingDevice.get().setEventOnProcess(event);
+                processingDevice.get().setEventOnProcess(event, event.getEventTime());
                 return;
             }
 
@@ -83,12 +89,15 @@ public class SystemController {
 
     private void generateBufferDevices(int count, List<Event> events) {
         for (int i = 0; i < count; i++) {
+            ModelingController.tableBuffers.add(new TableBuffer(i + 1, "Свободен"));
             bufferDevices.add(new BufferDevice(events, i + 1));
         }
     }
 
     private void generateProcessingDevices(int count, double a, double b, List<Event> events) {
         for (int i = 0; i < count; i++) {
+            ModelingController.tableProcessingDevices.add(new TableProcessingDevice(i + 1, "Простой",
+                    0.0, 0.0));
             processingDevices.add(new ProcessingDevice(i + 1, a, b, events));
         }
     }
