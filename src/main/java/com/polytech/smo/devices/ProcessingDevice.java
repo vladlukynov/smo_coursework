@@ -28,17 +28,17 @@ public class ProcessingDevice {
         this.endProcessingTime = 0;
     }
 
-    public void setEventOnProcess(Event event, double setTime) {
+    public void setEventOnProcess(Event event, double startTime) {
         isProcessing = true;
         processingEvent = event;
-        this.endProcessingTime = event.getEventTime() + Utils.getNormalDistributionTime(a, b);
+        this.endProcessingTime = startTime + Utils.getNormalDistributionTime(a, b);
         events.add(new Event(EventTypes.EndProcessing, endProcessingTime, event.getDeviceId(), event.getCount()));
-        ModelingController.tableEvents.add(new TableEvent(setTime, "Постановка заявки " +
+        ModelingController.tableEvents.add(new TableEvent(startTime, "Постановка заявки " +
                 event.getDeviceId() + "." + event.getCount() + " на прибор " + deviceId));
 
         ModelingController.tableProcessingDevices.removeIf(device -> device.getDeviceId() == deviceId);
         ModelingController.tableProcessingDevices.add(new TableProcessingDevice(deviceId, "Выполняет заявку " +
-                event.getDeviceId() + "." + event.getCount(), event.getEventTime(), endProcessingTime));
+                event.getDeviceId() + "." + event.getCount(), startTime, endProcessingTime));
     }
 
     public void free() {

@@ -36,7 +36,7 @@ public class SettingsController {
             SMOApplication.initializeSystemController(sourceDevicesCount, bufferDevicesCount, processingDevicesCount,
                     lambda, a, b);
 
-            Utils.createStage("modeling-view.fxml", "Моделирование", Utils.getStage(sourceDeviceCountLabel),
+            Utils.openWindow("modeling-view.fxml", "Моделирование", Utils.getStage(sourceDeviceCountLabel),
                     true, true);
         } catch (NumberFormatException | IOException exception) {
             new Alert(Alert.AlertType.ERROR, exception.getMessage(), ButtonType.OK).showAndWait();

@@ -19,6 +19,7 @@ public class SystemController {
     private final List<BufferDevice> bufferDevices;
     private final List<ProcessingDevice> processingDevices;
     private final List<Event> events;
+    private double currentTime;
 
     public SystemController(int sourceDevicesCount, int bufferDevicesCount, int processingDevicesCount,
                             double lambda, double a, double b) {
@@ -28,7 +29,7 @@ public class SystemController {
         this.events = new ArrayList<>();
 
         generateSourceDevices(sourceDevicesCount, lambda, events);
-        generateBufferDevices(bufferDevicesCount, events);
+        generateBufferDevices(bufferDevicesCount);
         generateProcessingDevices(processingDevicesCount, a, b, events);
     }
 
@@ -39,6 +40,7 @@ public class SystemController {
 
         events.sort(Utils.eventComparator);
         Event event = popEvent();
+        currentTime = event.getEventTime();
 
         if (event.getEventType() == EventTypes.EndProcessing) {
             Optional<ProcessingDevice> processingDevice = processingDevices.stream()
@@ -49,8 +51,8 @@ public class SystemController {
             Optional<BufferDevice> bufferDevice = bufferDevices.stream().filter(BufferDevice::isBuffered_)
                     .max(Utils.bufferedEventTimeComparator);
             if (bufferDevice.isPresent()) {
-                Event bufferedEvent = bufferDevice.get().getEventAndFreeDevice(event.getEventTime());
-                processingDevice.ifPresent(device -> device.setEventOnProcess(bufferedEvent, event.getEventTime()));
+                Event bufferedEvent = bufferDevice.get().getEventAndFreeDevice(currentTime);
+                processingDevice.ifPresent(device -> device.setEventOnProcess(bufferedEvent, currentTime));
                 return;
             }
 
@@ -64,7 +66,7 @@ public class SystemController {
                     .min(Utils.processingDevicePriorityComparator);
 
             if (processingDevice.isPresent()) {
-                processingDevice.get().setEventOnProcess(event, event.getEventTime());
+                processingDevice.get().setEventOnProcess(event, currentTime);
                 return;
             }
 
@@ -87,10 +89,10 @@ public class SystemController {
         }
     }
 
-    private void generateBufferDevices(int count, List<Event> events) {
+    private void generateBufferDevices(int count) {
         for (int i = 0; i < count; i++) {
             ModelingController.tableBuffers.add(new TableBuffer(i + 1, "Свободен"));
-            bufferDevices.add(new BufferDevice(events, i + 1));
+            bufferDevices.add(new BufferDevice(i + 1));
         }
     }
 

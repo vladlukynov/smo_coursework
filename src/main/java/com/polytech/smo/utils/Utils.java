@@ -24,8 +24,8 @@ public class Utils {
         return Math.random() * (b - a) + a;
     }
 
-    public static void createStage(String view, String title, Stage oldStage, boolean closeCurrentStage,
-                                    boolean resizable) throws IOException {
+    public static void openWindow(String view, String title, Stage oldStage, boolean closeCurrentStage,
+                                  boolean resizable) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(SMOApplication.class.getResource(view));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
