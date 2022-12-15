@@ -123,4 +123,12 @@ public class SystemController {
         Optional<SourceDevice> sourceDevice = sourceDevices.stream().filter(device -> device.getDeviceId() == deviceId).findFirst();
         sourceDevice.ifPresent(SourceDevice::generateEvent);
     }
+
+    public int getSourceDevicesCount() {
+        return sourceDevices.size();
+    }
+
+    public int getProcessingDeviceCount() {
+        return processingDevices.size();
+    }
 }

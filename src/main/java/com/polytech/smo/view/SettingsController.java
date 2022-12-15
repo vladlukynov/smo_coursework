@@ -22,6 +22,8 @@ public class SettingsController {
     private TextField aLabel;
     @FXML
     private TextField bLabel;
+    @FXML
+    private TextField autoModeEventsCount;
 
     @FXML
     protected void onApplyButtonClick() {
@@ -32,9 +34,12 @@ public class SettingsController {
             double lambda = Double.parseDouble(lambdaLabel.getText());
             double a = Double.parseDouble(aLabel.getText());
             double b = Double.parseDouble(bLabel.getText());
+            int eventsCount = Integer.parseInt(autoModeEventsCount.getText());
 
             SMOApplication.initializeSystemController(sourceDevicesCount, bufferDevicesCount, processingDevicesCount,
                     lambda, a, b);
+
+            SMOApplication.initializeStatisticController(eventsCount);
 
             Utils.openWindow("modeling-view.fxml", "Моделирование", Utils.getStage(sourceDeviceCountLabel),
                     true, true);

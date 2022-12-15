@@ -1,5 +1,7 @@
 package com.polytech.smo.devices;
 
+import com.polytech.smo.EventInformation;
+import com.polytech.smo.SMOApplication;
 import com.polytech.smo.events.Event;
 import com.polytech.smo.events.EventTypes;
 import com.polytech.smo.table.TableEvent;
@@ -28,6 +30,9 @@ public class SourceDevice {
     public void generateEvent() {
         count++;
         events.add(new Event(EventTypes.Generation, currentTime, deviceId, count));
+
+        SMOApplication.statisticCollector.addEvent(new EventInformation(deviceId, count, currentTime));
+
         ModelingController.tableEvents.add(new TableEvent(currentTime, "Сгенерирована заявка " + deviceId + "." + count));
         currentTime = nextGenerationTime;
         nextGenerationTime += Utils.getPoissonDistributionTime(lambda);

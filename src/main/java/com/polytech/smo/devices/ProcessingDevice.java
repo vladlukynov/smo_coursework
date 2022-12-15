@@ -1,5 +1,7 @@
 package com.polytech.smo.devices;
 
+import com.polytech.smo.ProcessingInformation;
+import com.polytech.smo.SMOApplication;
 import com.polytech.smo.events.Event;
 import com.polytech.smo.events.EventTypes;
 import com.polytech.smo.table.TableEvent;
@@ -39,6 +41,9 @@ public class ProcessingDevice {
         ModelingController.tableProcessingDevices.removeIf(device -> device.getDeviceId() == deviceId);
         ModelingController.tableProcessingDevices.add(new TableProcessingDevice(deviceId, "Выполняет заявку " +
                 event.getDeviceId() + "." + event.getCount(), startTime, endProcessingTime));
+
+        SMOApplication.statisticCollector.addProcessingTime(event, startTime, endProcessingTime);
+        SMOApplication.statisticCollector.addProcessingInfo(new ProcessingInformation(deviceId, startTime, endProcessingTime));
     }
 
     public void free() {
