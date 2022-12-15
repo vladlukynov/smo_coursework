@@ -19,20 +19,20 @@
          <children>
             <VBox>
                <children>
-                  <Label text="sourceDevicesCount" />
+                  <Label text="Количество источников" />
                   <TextField fx:id="sourceDeviceCountLabel" text="4" />
                </children>
             </VBox>
             <VBox>
                <children>
-                  <Label text="bufferDevicesCount" />
+                  <Label text="Количество устройств буфера" />
                   <TextField fx:id="bufferDeviceCountLabel" text="4" />
                </children>
             </VBox>
             <VBox>
                <children>
-                  <Label text="processingDevicesCount" />
-                  <TextField fx:id="processingDeviceCountLabel" text="4" />
+                  <Label text="Колиечтво приборов" />
+                  <TextField fx:id="processingDeviceCountLabel" text="7" />
                </children>
             </VBox>
             <VBox>
@@ -46,17 +46,23 @@
                   <VBox>
                      <children>
                         <Label text="a" />
-                        <TextField fx:id="aLabel" text="2.0" />
+                        <TextField fx:id="aLabel" text="3.0" />
                      </children>
                   </VBox>
                   <VBox>
                      <children>
                         <Label text="b" />
-                        <TextField fx:id="bLabel" text="3.0" />
+                        <TextField fx:id="bLabel" text="4.0" />
                      </children>
                   </VBox>
                </children>
             </HBox>
+            <VBox>
+               <children>
+                  <Label text="Количество генерируемых заявок при автоматическом моделировании" wrapText="true" />
+                  <TextField fx:id="autoModeEventsCount" text="10000" />
+               </children>
+            </VBox>
          </children>
       </VBox>
       <Button mnemonicParsing="false" onAction="#onApplyButtonClick" text="Установить" />

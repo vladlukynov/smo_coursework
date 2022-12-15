@@ -9,6 +9,7 @@ import java.io.IOException;
 
 public class SMOApplication extends Application {
     public static SystemController systemController;
+    public static StatisticCollector statisticCollector;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -28,5 +29,9 @@ public class SMOApplication extends Application {
                                                   double lambda, double a, double b) {
         systemController = new SystemController(sourceDevicesCount, bufferDevicesCount, processingDevicesCount,
                 lambda, a, b);
+    }
+
+    public static void initializeStatisticController(int eventsCount) {
+        statisticCollector = new StatisticCollector(eventsCount);
     }
 }

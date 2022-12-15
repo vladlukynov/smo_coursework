@@ -1,5 +1,6 @@
 package com.polytech.smo.devices;
 
+import com.polytech.smo.SMOApplication;
 import com.polytech.smo.events.Event;
 import com.polytech.smo.table.TableBuffer;
 import com.polytech.smo.table.TableEvent;
@@ -24,6 +25,8 @@ public class BufferDevice {
         ModelingController.tableBuffers.removeIf(device -> device.getDeviceId() == deviceId);
         ModelingController.tableBuffers.add(new TableBuffer(deviceId, "Ожидание заявки " +
                 event.getDeviceId() + "." + event.getCount()));
+
+        SMOApplication.statisticCollector.addSetInBufferTime(event);
     }
 
     public void freeAndBufferNewEvent(Event event) {
@@ -31,6 +34,9 @@ public class BufferDevice {
         ModelingController.tableBuffers.add(new TableBuffer(deviceId, "Свободен"));
         ModelingController.tableEvents.add(new TableEvent(event.getEventTime(),
                 "Заявка " + bufferedEvent.getDeviceId() + "." + bufferedEvent.getCount() + " ушла в отказ"));
+
+        SMOApplication.statisticCollector.addOutFromBufferTimeAndKick(bufferedEvent, event.getEventTime());
+
         bufferEvent(event);
     }
 
@@ -38,6 +44,9 @@ public class BufferDevice {
         ModelingController.tableBuffers.removeIf(device -> device.getDeviceId() == deviceId);
         ModelingController.tableBuffers.add(new TableBuffer(deviceId, "Свободен"));
         ModelingController.tableEvents.add(new TableEvent(currentTime, "Освобождение буфера " + deviceId));
+
+        SMOApplication.statisticCollector.addOutFromBufferTime(bufferedEvent, currentTime);
+
         this.isBuffered = false;
         Event event = this.bufferedEvent;
         this.bufferedEvent = null;

@@ -9,4 +9,6 @@ module com.polytech.smo {
     exports com.polytech.smo;
     exports com.polytech.smo.view;
     exports com.polytech.smo.table;
+    exports com.polytech.smo.events;
+    exports com.polytech.smo.devices;
 }

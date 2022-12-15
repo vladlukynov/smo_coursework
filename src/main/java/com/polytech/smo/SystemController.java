@@ -44,8 +44,13 @@ public class SystemController {
 
         if (event.getEventType() == EventTypes.EndProcessing) {
             Optional<ProcessingDevice> processingDevice = processingDevices.stream()
-                    .filter(device -> device.getProcessingEvent().getDeviceId() == event.getDeviceId() &&
-                            device.getProcessingEvent().getCount() == event.getCount()).findFirst();
+                    .filter(device -> {
+                        if (!device.isFree()) {
+                            return device.getProcessingEvent().getDeviceId() == event.getDeviceId() &&
+                                    device.getProcessingEvent().getCount() == event.getCount();
+                        }
+                        return false;
+                    }).findFirst();
             processingDevice.ifPresent(ProcessingDevice::free);
 
             Optional<BufferDevice> bufferDevice = bufferDevices.stream().filter(BufferDevice::isBuffered_)
@@ -122,5 +127,13 @@ public class SystemController {
     private void generateEvent(int deviceId) {
         Optional<SourceDevice> sourceDevice = sourceDevices.stream().filter(device -> device.getDeviceId() == deviceId).findFirst();
         sourceDevice.ifPresent(SourceDevice::generateEvent);
+    }
+
+    public int getSourceDevicesCount() {
+        return sourceDevices.size();
+    }
+
+    public int getProcessingDeviceCount() {
+        return processingDevices.size();
     }
 }

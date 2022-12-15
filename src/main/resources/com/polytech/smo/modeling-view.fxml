@@ -13,7 +13,7 @@
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.polytech.smo.view.ModelingController">
   <tabs>
-    <Tab text="Step-by-step mode">
+    <Tab text="Пошаговый режим">
          <content>
             <VBox alignment="CENTER" spacing="50.0">
                <children>
@@ -87,16 +87,57 @@
                </padding>
             </VBox>
          </content></Tab>
-    <Tab text="Auto mode">
+    <Tab text="Автоматический режим">
          <content>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                <children>
-                  <Label text="Автоматический режим">
-                     <font>
-                        <Font name="System Bold" size="36.0" />
-                     </font>
-                  </Label>
+                  <VBox VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label text="Статистика по источникам">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <TableView fx:id="sourceStatTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                          <columns>
+                            <TableColumn fx:id="sourceNumColumn" prefWidth="75.0" text="№ источника" />
+                            <TableColumn fx:id="eventCountColumn" prefWidth="75.0" text="Количество заявок" />
+                              <TableColumn fx:id="rejectPercentColumn" prefWidth="75.0" text="Процент отказов" />
+                              <TableColumn fx:id="avgFullTimeColumn" prefWidth="75.0" text="Среднее время в системе" />
+                              <TableColumn fx:id="avgBufferTimeColumn" prefWidth="75.0" text="Среднее время буфера" />
+                              <TableColumn fx:id="avgProcessTimeColumn" prefWidth="75.0" text="Среднее время обслуживания" />
+                              <TableColumn fx:id="dBufferColumn" prefWidth="75.0" text="Дисперсия буфера" />
+                              <TableColumn fx:id="dProcessingColumn" prefWidth="75.0" text="Дисперсия обслуживания" />
+                          </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </children>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <Label text="Коэффициент использования приборов">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <TableView fx:id="coeffUsingTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                          <columns>
+                            <TableColumn fx:id="processingDeviceNumColumn" prefWidth="75.0" text="№ прибора" />
+                            <TableColumn fx:id="usingCoeffColumn" prefWidth="75.0" text="Коэффициент использования" />
+                          </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </children>
+                  </VBox>
+                  <Button mnemonicParsing="false" onAction="#startAutoModeClick" text="Начать моделирование" />
                </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
             </VBox>
          </content></Tab>
   </tabs>

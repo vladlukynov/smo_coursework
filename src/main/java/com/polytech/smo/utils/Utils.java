@@ -17,7 +17,7 @@ import java.util.Comparator;
 
 public class Utils {
     public static double getPoissonDistributionTime(double lambda) {
-        return (-1 / lambda) * Math.log(Math.random());
+        return (-1 / lambda) * Math.log(Math.random() / 100);
     }
 
     public static double getNormalDistributionTime(double a, double b) {
